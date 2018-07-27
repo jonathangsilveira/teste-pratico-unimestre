@@ -5,6 +5,40 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 
 -->
+<?php 
+require_once "utils/FormUtils.php";
+require_once "entidade/Entidade.php";
+require_once "entidade/Curriculo.php";
+require_once "controle/Controller.php";
+require_once "controle/CurriculoController.php";
+
+$acao = filter_input(INPUT_GET, "acao");
+if (FormUtils::isInsert($acao)) {
+    $idUsuario = 0;
+    $login = "";
+    $senha = "";
+    $email = "";
+    $curriculo = new Curriculo();
+    $curriculo->setId(0);
+    $curriculo->setNome("");
+    $curriculo->setEmail("");
+    $curriculo->setCpf("");
+    $curriculo->setDataNascimento("");
+    $curriculo->setSexo("");
+    $curriculo->setEstadoCivil(0);
+    $curriculo->setEscolaridade(0);
+    $curriculo->setEspecializacoes("");
+    $curriculo->setExperienciasProfissionais("");
+} else {
+    $idUsuario = filter_input(INPUT_SESSION, "idUsuario");
+    $login = filter_input(INPUT_SESSION, "login");
+    $senha = filter_input(INPUT_SESSION, "senha");
+    $email = filter_input(INPUT_SESSION, "email");
+    $controller = new CurriculoController();
+    $curriculo = $controller->buscarPeloUsuario($idUsuario);
+}
+
+?>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -15,11 +49,6 @@ and open the template in the editor.
         <title>Cadastro Currículos</title>
     </head>
     <body>
-        <?php 
-            //session_start();
-            //$_SESSION['nome'] = "Pedrinho";
-            //require_once "Utils/FormUtils.php";
-        ?>
         <!-- Título da tela -->
         <div class="col-sm-12 col-md-12">
             <div class="col-sm-4 col-md-4">&nbsp;</div>
@@ -35,8 +64,10 @@ and open the template in the editor.
         <!-- Formulário -->
         <div class="container">
             <form action="gravarcurriculo.php" method="POST">
-                <input type="hidden" id="acao" name="acao" value="<?php echo filter_input(INPUT_GET, "acao"); ?>" />
-                <input type="hidden" id="id" name="id" value="<?php echo "ID" ?>" />
+                <input type="hidden" id="acao" name="acao" 
+                       value="<?php echo $acao; ?>" />
+                <input type="hidden" id="id" name="id" 
+                       value="<?php echo $curriculo->getId(); ?>" />
                 <h3>Dados de Acesso</h3>
                 <!-- Espaçamento -->
                 <div class="col-sm-12 col-md-12">&nbsp;</div>
@@ -44,7 +75,9 @@ and open the template in the editor.
                     <label for="email" class="col-sm-2 control-label">Email:</label>
                     <div class="col-sm-10">
                         <input type="email" class="form-control" id="email" 
-                               placeholder="Ex.: nome@companhia.com" name="email">
+                               placeholder="Ex.: nome@companhia.com" 
+                               name="email" 
+                               value="<?php echo $email; ?>">
                     </div>
                 </div>
                 <!-- Espaçamento -->
@@ -53,7 +86,8 @@ and open the template in the editor.
                     <label for="login" class="col-sm-2 control-label">Login:</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="login" 
-                               placeholder="Login" name="login">
+                               placeholder="Login" name="login" 
+                               value="<?php echo $login; ?>">
                     </div>
                 </div>
                 <!-- Espaçamento -->
@@ -62,7 +96,8 @@ and open the template in the editor.
                     <label for="senha" class="col-sm-2 control-label">Senha:</label>
                     <div class="col-sm-10">
                         <input type="password" class="form-control" id="senha" 
-                               placeholder="Senha" name="senha">
+                               placeholder="Senha" name="senha" 
+                               value="<?php echo $senha ?>">
                     </div>
                 </div>
                 <!-- Espaçamento -->
@@ -74,7 +109,8 @@ and open the template in the editor.
                     <label for="nome" class="col-sm-2 control-label">Nome:</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="nome" 
-                               placeholder="Nome completo" name="nome">
+                               placeholder="Nome completo" name="nome" 
+                               value="<?php echo $curriculo->getNome(); ?>">
                     </div>
                 </div>
                 <!-- Espaçamento -->
@@ -83,7 +119,8 @@ and open the template in the editor.
                     <label for="cpf" class="col-sm-2 control-label">CPF:</label>
                     <div class="col-sm-10">
                         <input type="number" class="form-control" id="cpf" 
-                               placeholder="Somente números" name="cpf">
+                               placeholder="Somente números" name="cpf" 
+                               value="<?php echo $curriculo->getCpf(); ?>">
                     </div>
                 </div>
                 <!-- Espaçamento -->
@@ -94,7 +131,8 @@ and open the template in the editor.
                     </label>
                     <div class="col-sm-10">
                         <input type="date" class="form-control" id="dataNascimento" 
-                               placeholder="DD/MM/YYYY" name="dataNascimento">
+                               placeholder="DD/MM/YYYY" name="dataNascimento" 
+                               value="<?php echo $curriculo->getDataNascimento(); ?>">
                     </div>
                 </div>
                 <!-- Espaçamento -->
@@ -105,9 +143,9 @@ and open the template in the editor.
                     </label>
                     <div class="col-sm-10">
                         <select class="form-control" id="sexo" name="sexo"> 
-                            <option value=""></option>
-                            <option value="M">Masculino</option>
-                            <option value="F">Feminino</option>
+                            <option value="" <?php echo empty($curriculo->getSexo()) ? "selected" : ""; ?>></option>
+                            <option value="M" <?php echo $curriculo->getSexo() == "M" ? "selected" : ""; ?>>Masculino</option>
+                            <option value="F" <?php echo $curriculo->getSexo() == "F" ? "selected" : ""; ?>>Feminino</option>
                         </select>
                     </div>
                 </div>

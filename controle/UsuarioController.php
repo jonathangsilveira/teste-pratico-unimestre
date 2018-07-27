@@ -61,7 +61,7 @@ class UsuarioController extends Controller {
         return $usuarios[0]; 
     }
     
-    public function buscarPeloLoginSenha($login, $senha) : Usuario {
+    public function buscarPeloLoginSenha($login, $senha) {
         $conexao = $this->conectarDatabase();
         $dao = new UsuarioDao($conexao);
         $usuario = $dao->buscarPeloLogin($login, $senha);

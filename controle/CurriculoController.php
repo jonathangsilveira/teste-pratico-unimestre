@@ -54,4 +54,12 @@ class CurriculoController extends Controller {
         return $curriculos[0]; 
     }
     
+    public function buscarPeloUsuario($idUsuario) : Curriculo {
+        $conexao = $this->conectarDatabase();
+        $dao = new CurriculoDao($conexao);
+        $curriculos = $dao->buscarPeloId($idUsuario);
+        $this->finalizarTransacao($conexao);
+        return $curriculos[0]; 
+    }
+    
 }

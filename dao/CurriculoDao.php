@@ -56,6 +56,18 @@ class CurriculoDao implements Dao {
         }
         return $curriculos;
     }
+    
+    public function buscarPeloUsuario($idUsuario) {
+        $sql = "SELECT * FROM curriculo WHERE id_usuario = $idUsuario";
+        $resultados = $this->conexao->query($sql);
+        $curriculos = array();
+        if ($resultados->num_rows > 0) {
+            while($resultado = $resultados->fetch_assoc()) {
+                $curriculos[] = $this->mapearCurriculo($resultado);
+            }
+        }
+        return $curriculos;
+    }
 
     public function inserir($entidade) : int {
         $nome = $entidade->getNome();

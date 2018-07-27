@@ -15,11 +15,14 @@ $login = filter_input(INPUT_POST, "login");
 $senha = filter_input(INPUT_POST, "senha");
 $controller = new UsuarioController();
 $usuario = $controller->buscarPeloLoginSenha($login, $senha);
-if ($usuario != null) {
-    session_start();
-    $_SESSION["idUsuario"] = $usuario->getId();
-    header("Location: cadastrocurriculo.php?acao=alterar");
-} else {
+if (is_null($usuario)) {
     $erro = "Usuário inválido ou não cadastrado";
     header("Location: login.php?concluido=false&erro=$erro");
+} else {
+    session_start();
+    $_SESSION["idUsuario"] = $usuario->getId();
+    $_SESSION["login"] = $usuario->getLogin();
+    $_SESSION["senha"] = $usuario->getSenha();
+    $_SESSION["email"] = $usuario->getEmail();
+    header("Location: cadastrocurriculo.php?acao=alterar");
 }

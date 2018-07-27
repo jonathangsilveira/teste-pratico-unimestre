@@ -68,7 +68,7 @@ class UsuarioDao implements Dao {
         return $idGerado;
     }
     
-    private function mapearUsuario($resultado) : Login {
+    private function mapearUsuario($resultado) : Usuario {
         $usuario = new Usuario();
         $usuario->setId($resultado["id"]);
         $usuario->setLogin($resultado["login"]);
@@ -77,14 +77,14 @@ class UsuarioDao implements Dao {
         return $usuario;
     }
     
-    public function buscarPeloLogin($login, $senha) : Usuario {
+    public function buscarPeloLogin($login, $senha) {
         $sql = "SELECT * FROM usuario WHERE login = '$login' AND "
                 . "senha = '$senha'";
         $resultados = $this->conexao->query($sql);
         $usuarios = array();
         if ($resultados->num_rows > 0) {
             while($resultado = $resultados->fetch_assoc()) {
-                $usuarios[] = $this->mapearCurriculo($resultado);
+                $usuarios[] = $this->mapearUsuario($resultado);
             }
         }
         return $usuarios[0];
